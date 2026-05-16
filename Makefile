@@ -1,14 +1,10 @@
-NAME := inception
+NAME := Inception
 
 # ============================================================================ #
 #                               COMPILOR & FLAGS                                  #
 # ============================================================================ #
 
 MAKE_CMD ?= $(MAKE)
-# CXX := c++
-# CXXFLAGS := -Wall -Wextra -Werror
-# CXXFLAGS += -std=c++98
-# DEBUG_FLAGS := -DDEBUG -O0
 
 # ============================================================================ #
 #                                DIRECTORIES                                   #
@@ -16,10 +12,13 @@ MAKE_CMD ?= $(MAKE)
 
 SRC_DIR := srcs
 SECRET_DIR := secrets
+DATA_DIR := /home/mzhou/data
 
 # ============================================================================ #
 #                                  SOURCES                                     #
 # ============================================================================ #
+
+COMPOSE_FILE := $(SRC_DIR)/docker-compose.yml
 
 
 # ============================================================================ #
@@ -43,29 +42,47 @@ BOLD := \033[1m
 
 
 #Default target
-all: $(NAME)
-	@printf "$(GREEN)$(BOLD)✓ Build complete!\n$(RESET)"
-
-#Link the final executable
-$(NAME):
-	@printf "$(CYAN)Linking $(NAME)...\n$(RESET)"
-	@$(CXX) $(CXXFLAGS) main.cpp $(OBJS) -o $(NAME)
+all: 
+	@printf "$(CYAN)Building $(NAME)...\n$(RESET)"
+	docker compose -f $(COMPOSE_FILE) up -d --build
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) created successfully!🥳🥳🥳\n$(RESET)"
+
+#Follow logs
+logs:
+	@printf "$(CYAN)Showing logs...\n$(RESET)"
+	docker compose -f $(COMPOSE_FILE) logs -f
+
+#Stop containers
+down:
+	@printf "$(CYAN)Stopping $(NAME)...\n$(RESET)"
+	docker compose -f $(COMPOSE_FILE) down
+	@printf "$(GREEN)$(BOLD)✓ $(NAME) is down 🥳🥳🥳\n$(RESET)"
+
+#Stop and remove the volumes and images
+clean: down
+	@printf "🧹$(CYAN)Cleaning volumes and images..\n$(RESET)"
+	docker compose -f $(COMPOSE_FILE) down --volumes --rmi all
+	@printf "$(GREEN)$(BOLD)✓ Cleaned🧹🧹🧹\n$(RESET)"
+
+#Fully reset (clean + remove DATA_DIR)
+fclean: clean
+	@printf "🧹$(CYAN)Removing persistent data..\n$(RESET)"
+	rm -f $(DATA_DIR)
+	@printf "$(GREEN)$(BOLD)✓ $(DATA_DIR) is removed successfully!🧹🧹🧹🧹\n$(RESET)"
+
+
 
 # ============================================================================ #
 #                                 🍻CLEANNING                                    #
 # ============================================================================ #
 
-clean:
-	@rm -rf $(OBJ_DIR)
-	@printf '🧹$(GREEN)Cleaning .o files... m(｡≧ｴ≦｡)m$(RESET)🧹🧹\n'
-
-fclean: clean
-	@rm -f $(NAME) $(TEST_DIR)/$(TEST_NAME)
-	# rm -f $(NAME_BONUS)
-	@printf '🧹🧹$(GREEN)Nothing left...ლ(◉◞౪◟◉ )ლ$(RESET)🧹🧹\n'
-
-re: fclean $(NAME)
+# clean:
+# 	@printf '🧹$(GREEN)Cleaning .o files... m(｡≧ｴ≦｡)m$(RESET)🧹🧹\n'
+#
+# fclean: clean
+# 	@printf '🧹🧹$(GREEN)Nothing left...ლ(◉◞౪◟◉ )ლ$(RESET)🧹🧹\n'
+#
+# re: fclean $(NAME)
 
 # ============================================================================ #
 #                              MAKEFILE SETTING                                #
@@ -77,4 +94,4 @@ re: fclean $(NAME)
 #Delete target files if command fails
 .DELETE_ON_ERROR:
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus logs down
