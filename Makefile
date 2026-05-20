@@ -12,13 +12,17 @@ MAKE_CMD ?= $(MAKE)
 
 SRC_DIR := srcs
 SECRET_DIR := secrets
-DATA_DIR := /home/mzhou/data
+# DATA_DIR := /home/mzhou/data
+DATA_DIR := $(PWD)/data
+DB_DIR := $(DATA_DIR)/db
+WORDPRESS_DIR := $(DATA_DIR)/wordpress
 
 # ============================================================================ #
 #                                  SOURCES                                     #
 # ============================================================================ #
 
 COMPOSE_FILE := $(SRC_DIR)/docker-compose.yml
+ENV_FILE := $(SRC_DIR)/.env
 
 
 # ============================================================================ #
@@ -44,6 +48,10 @@ BOLD := \033[1m
 #Default target
 all: 
 	@printf "$(CYAN)Building $(NAME)...\n$(RESET)"
+	mkdir -p $(DATA_DIR) && \
+	mkdir -p $(DB_DIR) && \
+	mkdir -p $(WORDPRESS_DIR) && \
+	echo "VOLUME_DIR=$(DATA_DIR)" >> $(ENV_FILE) && \
 	docker compose -f $(COMPOSE_FILE) up -d --build
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) created successfully!🥳🥳🥳\n$(RESET)"
 
@@ -58,6 +66,14 @@ down:
 	docker compose -f $(COMPOSE_FILE) down
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) is down 🥳🥳🥳\n$(RESET)"
 
+re: fclean all
+
+
+
+# ============================================================================ #
+#                                 🍻CLEANNING                                    #
+# ============================================================================ #
+
 #Stop and remove the volumes and images
 clean: down
 	@printf "🧹$(CYAN)Cleaning volumes and images..\n$(RESET)"
@@ -67,22 +83,10 @@ clean: down
 #Fully reset (clean + remove DATA_DIR)
 fclean: clean
 	@printf "🧹$(CYAN)Removing persistent data..\n$(RESET)"
-	rm -f $(DATA_DIR)
+	rm -rf $(DATA_DIR)
+	sed -i '' '/^VOLUME_DIR/d' $(ENV_FILE)
 	@printf "$(GREEN)$(BOLD)✓ $(DATA_DIR) is removed successfully!🧹🧹🧹🧹\n$(RESET)"
 
-
-
-# ============================================================================ #
-#                                 🍻CLEANNING                                    #
-# ============================================================================ #
-
-# clean:
-# 	@printf '🧹$(GREEN)Cleaning .o files... m(｡≧ｴ≦｡)m$(RESET)🧹🧹\n'
-#
-# fclean: clean
-# 	@printf '🧹🧹$(GREEN)Nothing left...ლ(◉◞౪◟◉ )ლ$(RESET)🧹🧹\n'
-#
-# re: fclean $(NAME)
 
 # ============================================================================ #
 #                              MAKEFILE SETTING                                #
