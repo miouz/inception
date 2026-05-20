@@ -1,1 +1,49 @@
-version: "3"
+#mariadb
+name: "${DOMAIN_NAME}"
+services:
+  mariadb:
+    build: requirements/mariadb/
+    container_name: mariadb
+    image: mariadb:custom
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - "${APP_PORT}:${MARIADB_PORT}"
+    env_file: .env
+    networks:
+      - inception
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mariadb", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}", "-e", "SELECT 1;"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  #
+  # wordpress:
+  #   build: requirements/wordpress/
+  #   image: wordpress:custom
+  #   depends_on:
+  #     mariadb:
+  #       condition: service_healthy
+
+volumes:
+  db:
+    name: "${DOMAIN_NAME}_db"
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "${VOLUME_DIR}/db"
+  wordpress:
+    name: "${DOMAIN_NAME}_wordpress"
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "${VOLUME_DIR}/wordpress"
+
+networks:
+  inception:
+    name: ${DOMAIN_NAME}_network
+    driver: bridge
