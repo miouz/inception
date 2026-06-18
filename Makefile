@@ -12,8 +12,7 @@ MAKE_CMD ?= $(MAKE)
 
 SRC_DIR := srcs
 SECRET_DIR := secrets
-# DATA_DIR := /home/mzhou/data
-DATA_DIR := $(PWD)/data
+DATA_DIR := /home/mzhou/data
 DB_DIR := $(DATA_DIR)/db
 WORDPRESS_DIR := $(DATA_DIR)/wordpress
 
