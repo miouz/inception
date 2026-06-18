@@ -1,8 +1,8 @@
 --creat new database
-CREATE DATABASE IF NOT EXISTS inception_database;
+CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};
 
 --switch to database
-USE inception_database;
+USE ${MARIADB_DATABASE};
 
 --creat new table
 CREATE TABLE users(

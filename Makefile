@@ -51,8 +51,8 @@ all:
 	mkdir -p $(DATA_DIR) && \
 	mkdir -p $(DB_DIR) && \
 	mkdir -p $(WORDPRESS_DIR) && \
-	echo "VOLUME_DIR=$(DATA_DIR)" >> $(ENV_FILE) && \
-	docker compose -f $(COMPOSE_FILE) up -d --build
+	docker compose -f $(COMPOSE_FILE) build --no-cache
+	docker compose -f $(COMPOSE_FILE) up
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) created successfully!🥳🥳🥳\n$(RESET)"
 
 #Follow logs
@@ -84,7 +84,6 @@ clean: down
 fclean: clean
 	@printf "🧹$(CYAN)Removing persistent data..\n$(RESET)"
 	rm -rf $(DATA_DIR)
-	sed -i '' '/^VOLUME_DIR/d' $(ENV_FILE)
 	@printf "$(GREEN)$(BOLD)✓ $(DATA_DIR) is removed successfully!🧹🧹🧹🧹\n$(RESET)"
 
 

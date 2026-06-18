@@ -1,31 +1,91 @@
-#mariadb
 name: "${DOMAIN_NAME}"
+
 services:
   mariadb:
-    build: requirements/mariadb/
+    build:
+      context: requirements/mariadb/
+      tags: 
+        - mariadb:mybuild
+    image: mariadb:mybuild
     container_name: mariadb
-    image: mariadb:custom
     volumes:
       - db:/var/lib/mysql
-    ports:
-      - "${APP_PORT}:${MARIADB_PORT}"
     env_file: .env
     networks:
       - inception
-    restart: on-failure
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mariadb", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}", "-e", "SELECT 1;"]
+      test: ["CMD", "/usr/local/bin/mariadb_healthcheck.sh"]
       start_period: 10s
       interval: 10s
       timeout: 5s
       retries: 3
-  #
-  # wordpress:
-  #   build: requirements/wordpress/
-  #   image: wordpress:custom
-  #   depends_on:
-  #     mariadb:
-  #       condition: service_healthy
+    environment:
+      MARIADB_PASSWORD_FILE: /run/secrets/db_password
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    secrets:
+      - db_root_password
+      - db_password
+
+  wordpress:
+    build:
+      context: requirements/wordpress/
+      tags:
+        - wordpress:mybuild
+    image: wordpress:mybuild
+    container_name: wordpress
+    volumes:
+      - wordpress:/var/www/wordpress
+    env_file: .env
+    networks:
+      - inception
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9000"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
+      WORDPRESS_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
+      WORDPRESS_USER_PASSWORD_FILE: /run/secrets/wp_user_password
+    secrets:
+        - db_password
+        - wp_admin_password
+        - wp_user_password
+
+  nginx:
+    build: 
+      context: requirements/nginx/
+      tags:
+        - nginx:mybuild
+    image: nginx:mybuild
+    container_name: nginx
+    ports:
+      - "${APP_PORT}:443"
+    volumes:
+      - wordpress:/var/www/wordpress
+    env_file: .env
+    networks:
+      - inception
+    restart: unless-stopped
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
 
 volumes:
   db:
