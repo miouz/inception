@@ -11,10 +11,7 @@ RUN rm -rf /var/lib/mysql/*
 RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
 
 # Copy the custom MariaDB configuration file into the container
-COPY conf/mariadb.cnf /etc/mysql/conf.d/mariadb.cnf
-
-# Copy initialization SQL scripts into the Docker container
-COPY conf/init_db.sql /docker-entrypoint-initdb.d/
+COPY conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 COPY conf/entry-point.sh /entry-point.sh
 

@@ -44,5 +44,4 @@ EOSQL
 fi
 
 # Hand off to mysqld as the main process
-# exec mysqld --user=mysql
 exec mysqld --user=mysql

@@ -13,7 +13,7 @@ DB_PASSWORD="$(cat /run/secrets/db_password)"
 WP_ADMIN_PASSWORD="$(cat /run/secrets/wp_admin_password)"
 WP_USER_PASSWORD="$(cat /run/secrets/wp_user_password)"
 
-until mariadb -h mariadb -u"$MARIADB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" "$MARIADB_DATABASE" >/dev/null 2>&1
+until mariadb -h mariadb -u"$MARIADB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" "$MARIADB_DATABASE" >/dev/null 
 do
 	sleep 2
 done
