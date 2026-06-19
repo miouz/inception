@@ -5,7 +5,6 @@
 # -install WordPress files if the volume is empty
 # -create wp-config.php with the right DB settings
 # -and finally start PHP-FPM in the foreground
-#
 
 set -eux 
 
@@ -25,7 +24,7 @@ if [ ! -f wp-config.php ]; then
 		--dbname="$MARIADB_DATABASE" \
 		--dbuser="$MARIADB_USER" \
 		--dbpass="$DB_PASSWORD" \
-		--dbhost="$DB_HOST"
+		--dbhost=mariadb:3306
 
 	wp core install --allow-root \
 		--url="$DOMAIN_NAME" \

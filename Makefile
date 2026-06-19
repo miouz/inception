@@ -24,6 +24,17 @@ COMPOSE_FILE := $(SRC_DIR)/docker-compose.yml
 ENV_FILE := $(SRC_DIR)/.env
 
 
+#============================================================================ #
+#                                  SECRETS                                     #
+# ============================================================================ #
+ 
+SECRET_FILES := \
+	$(SECRET_DIR)/db_password \
+	$(SECRET_DIR)/db_root_password \
+	$(SECRET_DIR)/wp_admin_password \
+	$(SECRET_DIR)/wp_user_password
+ 
+
 # ============================================================================ #
 #                                   COLORS                                     #
 # ============================================================================ #
@@ -44,8 +55,22 @@ BOLD := \033[1m
 # ============================================================================ #
 
 
+#Generate missing secrets files
+secrets:
+	@printf "$(CYAN)🔍🔍🔍Verifying and generating secrets at current directory🕵️\n$(RESET)"
+	mkdir -p $(SECRET_DIR); \
+	for secret in $(SECRET_FILES); do \
+		if [ ! -s $$secret ]; then \
+			printf "$(YELLOW)㊙️Generating $$secret...\n$(RESET)"; \
+			openssl rand -base64 32 | tr -d '=+/' | head -c 32 > $$secret; \
+			printf "$(GREEN)✓ $$secret generated\n$(RESET)"; \
+		else \
+			printf "$(GREEN)✓ $$secret already exists, skipping㊙️\n$(RESET)"; \
+		fi \
+	done
+
 #Default target
-all: 
+all: secrets
 	@printf "$(CYAN)Building $(NAME)...\n$(RESET)"
 	mkdir -p $(DATA_DIR) && \
 	mkdir -p $(DB_DIR) && \
@@ -96,4 +121,4 @@ fclean: clean
 #Delete target files if command fails
 .DELETE_ON_ERROR:
 
-.PHONY: all clean fclean re bonus logs down
+.PHONY: all clean fclean re bonus logs down secrets
