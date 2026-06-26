@@ -1,6 +1,6 @@
 # Secrets — never commit this
 secrets/*
-# srcs/.env
+srcs/.env
 
 # macOS junk
 .DS_Store

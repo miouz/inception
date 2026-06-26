@@ -8,8 +8,8 @@ RUN set -eux; \
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-COPY tools/nginx_setup.sh /usr/local/bin/nginx_setup.sh
-RUN chmod +x /usr/local/bin/nginx_setup.sh
+COPY tools/generate_cert.sh /usr/local/bin/generate_cert.sh
+RUN chmod +x /usr/local/bin/generate_cert.sh
 
 EXPOSE 443
 

@@ -29,10 +29,10 @@ ENV_FILE := $(SRC_DIR)/.env
 # ============================================================================ #
  
 SECRET_FILES := \
-	$(SECRET_DIR)/db_password \
-	$(SECRET_DIR)/db_root_password \
-	$(SECRET_DIR)/wp_admin_password \
-	$(SECRET_DIR)/wp_user_password
+	$(SECRET_DIR)/db_password.txt \
+	$(SECRET_DIR)/db_root_password.txt \
+	$(SECRET_DIR)/wp_admin_password.txt \
+	$(SECRET_DIR)/wp_user_password.txt
  
 
 # ============================================================================ #
@@ -90,7 +90,7 @@ down:
 	docker compose -f $(COMPOSE_FILE) down
 	@printf "$(GREEN)$(BOLD)✓ $(NAME) is down 🥳🥳🥳\n$(RESET)"
 
-re: fclean all
+re: clean all
 
 
 

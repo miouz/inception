@@ -13,7 +13,7 @@ RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
 # Copy the custom MariaDB configuration file into the container
 COPY conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
-COPY conf/entry-point.sh /entry-point.sh
+COPY tools/entry-point.sh /entry-point.sh
 
 COPY tools/mariadb_healthcheck.sh /usr/local/bin/mariadb_healthcheck.sh
 
