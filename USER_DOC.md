@@ -95,7 +95,6 @@ Located in the `secrets/` directory at the root of the repository. These files a
 | `secrets/db_password.txt` | MariaDB WordPress user password |
 | `secrets/wp_admin_password.txt` | WordPress admin password |
 | `secrets/wp_user_password.txt` | WordPress user password |
-| `secrets/credentials.txt` | WordPress admin username and password |
 
 To read a secret:
 
@@ -115,7 +114,7 @@ Key variables:
 
 | Variable | Description |
 |---|---|
-| `DOMAIN_NAME` | Your domain (e.g. `wil.42.fr`) |
+| `DOMAIN_NAME` | Your domain (e.g. `mzhou.42.fr`) |
 | `MARIADB_DATABASE` | WordPress database name |
 | `VOLUME_DIR` | The persistent data directory on host machine (/home/login/data) |
 | `WP_TITLE` | WordPress title|
