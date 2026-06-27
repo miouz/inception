@@ -55,6 +55,16 @@ BOLD := \033[1m
 # ============================================================================ #
 
 
+#Default target
+all: secrets
+	@printf "$(CYAN)Building $(NAME)...\n$(RESET)"
+	mkdir -p $(DATA_DIR) && \
+	mkdir -p $(DB_DIR) && \
+	mkdir -p $(WORDPRESS_DIR) && \
+	docker compose -f $(COMPOSE_FILE) build --no-cache
+	docker compose -f $(COMPOSE_FILE) up
+	@printf "$(GREEN)$(BOLD)✓ $(NAME) created successfully!🥳🥳🥳\n$(RESET)"
+
 #Generate missing secrets files
 secrets:
 	@printf "$(CYAN)🔍🔍🔍Verifying and generating secrets at current directory🕵️\n$(RESET)"
@@ -68,16 +78,6 @@ secrets:
 			printf "$(GREEN)✓ $$secret already exists, skipping㊙️\n$(RESET)"; \
 		fi \
 	done
-
-#Default target
-all: secrets
-	@printf "$(CYAN)Building $(NAME)...\n$(RESET)"
-	mkdir -p $(DATA_DIR) && \
-	mkdir -p $(DB_DIR) && \
-	mkdir -p $(WORDPRESS_DIR) && \
-	docker compose -f $(COMPOSE_FILE) build --no-cache
-	docker compose -f $(COMPOSE_FILE) up
-	@printf "$(GREEN)$(BOLD)✓ $(NAME) created successfully!🥳🥳🥳\n$(RESET)"
 
 #Follow logs
 logs:

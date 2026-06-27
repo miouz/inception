@@ -59,7 +59,7 @@ services:
     image: nginx:mybuild
     container_name: nginx
     ports:
-      - "${APP_PORT}:443"
+      - "443:443"
     volumes:
       - wordpress:/var/www/wordpress
     env_file: .env

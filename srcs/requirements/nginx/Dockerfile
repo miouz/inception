@@ -13,5 +13,5 @@ RUN chmod +x /usr/local/bin/generate_cert.sh
 
 EXPOSE 443
 
-ENTRYPOINT ["/usr/local/bin/nginx_setup.sh"] 
+ENTRYPOINT ["/usr/local/bin/generate_cert.sh"] 
 
