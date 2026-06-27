@@ -118,6 +118,12 @@ Key variables:
 | `DOMAIN_NAME` | Your domain (e.g. `wil.42.fr`) |
 | `MARIADB_DATABASE` | WordPress database name |
 | `VOLUME_DIR` | The persistent data directory on host machine (/home/login/data) |
+| `WP_TITLE` | WordPress title|
+| `WP_ADMIN_USER` | WordPress admin user name |
+| `WP_ADMIN_EMAIL` | WordPress admin user's email |
+| `WP_USER` | WordPress  user name |
+| `WP_USER_EMAIL` | WordPress user's email |
+| `MARIADB_USER` | WordPress's mariadb user name |
 
 ### Regenerating secrets
 
@@ -160,6 +166,9 @@ curl -k https://<login>.42.fr
 ```
 
 A response containing WordPress HTML means the full stack is working correctly.
+
+Or open browser and go to https://<login>.42.fr
+
 
 **Check that data persists:**
 

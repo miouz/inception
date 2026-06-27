@@ -72,17 +72,30 @@ cp srcs/.env.example srcs/.env
 Minimum required variables:
 
 ```env
+domain name of your site:
 DOMAIN_NAME=
+
+the persistent data directory to be mounted to a named volume:
 VOLUME_DIR=/home/<login>/data
+
+the name of maraidb's database
 MARIADB_DATABASE=
 
+the wordpress's mariadb user name:
 MARIADB_USER=
 
-WP_USER=guts
-WP_ADMIN_USER=
-WP_TITLE=
-WP_ADMIN_EMAIL=
+the user name of wordpress:
+WP_USER=
+the email address of this user:
 WP_USER_EMAIL=
+
+the admin user name of wordpress:
+WP_ADMIN_USER=
+the email adress of admin user:
+WP_ADMIN_EMAIL=
+
+the title of wordpress:
+WP_TITLE=
 ```
 
 Do **not** put passwords in `.env`. They belong in `secrets/`.
